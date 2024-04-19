@@ -3,7 +3,7 @@
 const users = {};
 const domain = "@mydomain.com";
 
-function getUsername(fullName) {
+function getUser(fullName) {
   let fullNames = fullName.split(" ");
   let name = fullNames[0];
   let lastname = fullNames[1];
@@ -19,7 +19,7 @@ function addUser(user) {
   // let counter = 0; de esta forma cada vez que agregaba un nuevo usuario sin estar repetido el usuario tenia al final del username un 0
   let counter;
   
-  // Uso del metodo hasOwnProperty que nos devuelve true o false dependiendo si encontro coincidencia con lo que comparamos, en este caso lo usamos en nuestro objeto users para ver si el username coincidia con alguno ya existente en el objeto
+  // Uso del metodo hasOwnProperty que nos devuelve true o false dependiendo si encontro coincidencia con lo que comparamos, en este caso lo usamos en nuestro objeto users para ver si el username coincide con alguno ya existente en el objeto
   while (users.hasOwnProperty(user.username + counter)) {
     counter++;
   }
@@ -42,12 +42,12 @@ let flag = true
 while (flag) {
   const fullName = prompt("Ingrese su primer nombre y primer apellido:").toLowerCase();
   let name = fullName.split(" ");
-  if (name,length !== 2) {
+  if (name.length !== 2) {
     alert("Ingrese los valores solicitados");
     continue;
   }
 
-  const newUser = getUsername(fullName)
+  const newUser = getUser(fullName)
   addUser(newUser)
 
   flag = confirm("Quiere ingresar mas usuarios?:")
