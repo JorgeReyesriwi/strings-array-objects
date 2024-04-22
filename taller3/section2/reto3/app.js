@@ -36,8 +36,6 @@ function createProduct() {
 
     console.log("Producto creado exitosamente:");
     console.log(newProduct);
-    showProductsTable()
-
 }
 
 function duplicateProduct() {

@@ -7,7 +7,7 @@ const average = grades.reduce((accumulated, grade) => accumulated + grade, 0) / 
 
 const sortedGrades = grades.sort((a, b) => b - a);
 const maxGrade = sortedGrades[0]
-// pop() saca el ultimo item de un array y me lo almacena
+// pop() saca el ultimo item de un array y me lo almacena en la variable minGrade
 const copyGrades = sortedGrades
 const minGrade = copyGrades.pop()
 
