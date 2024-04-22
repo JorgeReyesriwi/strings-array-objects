@@ -33,7 +33,7 @@ function addUser(user) {
 function userList() {
   console.log("Lista de Usuarios:");
   Object.entries(users).forEach(([username, email]) => {
-      console.log(`Nombre de Usuario: ${username} \n Correo Electrónico: ${email}`);
+      console.log(`Nombre de Usuario: ${username} \n Correo Electronico: ${email}`);
   });
 }
 
