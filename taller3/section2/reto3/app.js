@@ -45,9 +45,17 @@ function duplicateProduct() {
 
     if (products.hasOwnProperty(productId)) {
         const originalProduct = products[productId];
+        let = copyCounter = 1
+        let duplictedName = originalProduct.name + ` copia ${copyCounter}`
+        console.log(products.hasOwnProperty(originalProduct.name))
+
+        while (Object.values(products).some(product => product.name === duplictedName)) {
+            copyCounter++
+            duplictedName = originalProduct.name + ` copia ${copyCounter}`
+        }
         const duplicatedProduct = Object.assign({}, originalProduct);
-        duplicatedProduct.name += " Copia";
-        duplicatedProduct.id = idCounter;
+        duplicatedProduct.name = duplictedName
+        duplicatedProduct.id = idCounter 
         products[idCounter] = duplicatedProduct;
         idCounter++;
         console.log("Producto duplicado exitosamente:");
