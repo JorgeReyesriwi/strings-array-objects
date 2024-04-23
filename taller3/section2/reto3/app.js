@@ -65,6 +65,20 @@ function duplicateProduct() {
     }
 }
 
+function searchProduct() {
+    showProductsTable()
+    const event = prompt("Ingrese el nombre del prodcuto que quiere ver")
+
+    const findProduct = Object.values(products).find(product => product.name === event) 
+
+    if (findProduct) {
+        console.log("El producto que quiere ver es")
+        console.table(findProduct)
+    } else {
+        console.log("producto no encontrado")
+    }
+}
+
 function main() {
     let option = 0;
 
@@ -80,7 +94,7 @@ function main() {
                 duplicateProduct();
             break;
             case 3:
-                // funcion ver producto por nombre
+                searchProduct()
                 break;
             case 4:
                 // funcion ver producto por rango de precios min-max
