@@ -8,7 +8,9 @@ function showMenu() {
     console.log("3. Vea un producto por nombre");
     console.log("4. Vea los productos en un rango de precio max-min");
     console.log("5. Elimine un producto");
-    console.log("6. Salir");
+    console.log("6. Verificar existencia de producto y venderlo");
+    console.log("7. Comprar un producto del inventario");
+    console.log("8. Salir");
 }
 
 function showProductsTable() {
@@ -35,7 +37,7 @@ function createProduct() {
     idCounter++;
 
     console.log("Producto creado exitosamente:");
-    console.log(newProduct);
+    console.table(newProduct);
 }
 
 function duplicateProduct() {
@@ -45,21 +47,21 @@ function duplicateProduct() {
 
     if (products.hasOwnProperty(productId)) {
         const originalProduct = products[productId];
-        let = copyCounter = 1
+        let copyCounter = 1
         let duplictedName = originalProduct.name + ` copia ${copyCounter}`
-        console.log(products.hasOwnProperty(originalProduct.name))
 
         while (Object.values(products).some(product => product.name === duplictedName)) {
             copyCounter++
             duplictedName = originalProduct.name + ` copia ${copyCounter}`
         }
-        const duplicatedProduct = Object.assign({}, originalProduct);
+    //  const duplicatedProduct = Object.assign({}, originalProduct); Alternativa, preguntar porque mejor una u otra
+        const duplicatedProduct = { ...originalProduct };
         duplicatedProduct.name = duplictedName
         duplicatedProduct.id = idCounter 
         products[idCounter] = duplicatedProduct;
         idCounter++;
         console.log("Producto duplicado exitosamente:");
-        console.log(duplicatedProduct);
+        console.table(duplicatedProduct);
     } else {
         console.log("El ID del producto ingresado no existe");
     }
@@ -67,9 +69,9 @@ function duplicateProduct() {
 
 function searchProduct() {
     showProductsTable()
-    const event = prompt("Ingrese el nombre del prodcuto que quiere ver")
+    const productName = prompt("Ingrese el nombre del prodcuto que quiere ver")
 
-    const findProduct = Object.values(products).find(product => product.name === event) 
+    const findProduct = Object.values(products).find(product => product.name === productName) 
 
     if (findProduct) {
         console.log("El producto que quiere ver es")
@@ -79,10 +81,89 @@ function searchProduct() {
     }
 }
 
+function productsByPriceRange() {
+    const minPrice = parseFloat(prompt("Ingrese el precio minimo:"));
+    const maxPrice = parseFloat(prompt("Ingrese el precio maximo:"));
+
+    const productsInPriceRange = Object.values(products).filter(product => product.price >= minPrice && product.price <= maxPrice);
+
+    if (productsInPriceRange.length > 0) {
+        console.log(`Productos en el rango de precio $${minPrice}  $${maxPrice}:`);
+        console.table(productsInPriceRange);
+    } else {
+        console.log("No hay productos en el rango de precio especificado");
+    }
+}
+
+function deleteProduct() {
+    showProductsTable();
+    const productId = parseInt(prompt("Ingrese el ID del producto a eliminar:"));
+
+    products = Object.values(products).filter(product => product.id !== productId);
+
+    console.log("Producto eliminado exitosamente");
+    showProductsTable();
+}
+
+function verifyProductExist() {
+    showProductsTable();
+    const productName = prompt("Ingrese el nombre del producto que desea vender")
+
+    const productExist = Object.values(products).some(product => product.name === productName)
+
+    if(productExist) {
+        const sellConfirmation = confirm(`¿Desea vender ${productName}?`);
+
+        if (sellConfirmation) {
+            const product = Object.values(products).find(product => product.name === productName);
+            sellProduct(product)
+        } else {
+            return;
+        //  showMenu()
+        }
+    } else {
+        console.log("El producto no existe en el inventario")
+    }
+}
+
+function sellProduct(product) {
+    console.log(`Detalles del producto a vender:`)
+    console.table([product])
+
+    const quantityToSell = parseInt(prompt(`Ingrese la cantidad de "${product.name}" que desea vender:`))
+
+    if (isNaN(quantityToSell) || quantityToSell <= 0) {
+        console.log("La cantidad ingresada es inválida.")
+        return
+    }
+
+    if (quantityToSell > product.quantity) {
+        console.log(`No hay suficiente "${product.name}" en inventario para vender.`)
+        return
+    }
+
+    if (quantityToSell === product.quantity) {
+        console.log(`No puede vender todo el inventario de "${product.name}". Por favor, ingrese una cantidad diferente.`)
+        return
+    }
+
+    if (quantityToSell < (product.quantity - 1)) {
+        const confirmSellAlmostAll = confirm(`Está a punto de vender ${quantityToSell} de "${product.name}". ¿Está seguro?`)
+        if (!confirmSellAlmostAll) {
+            console.log("Operación cancelada. No se ha realizado ninguna venta.")
+            return
+        }
+    }
+    
+    product.quantity -= quantityToSell
+    console.log(`Se vendieron ${quantityToSell} de ${product.name}`)
+    showProductsTable()
+}
+
 function main() {
     let option = 0;
 
-    while (option !== 6) {
+    while (option !== 8) {
         showMenu();
         option = parseInt(prompt("Seleccione una opción del menu:"));
 
@@ -97,12 +178,16 @@ function main() {
                 searchProduct()
                 break;
             case 4:
-                // funcion ver producto por rango de precios min-max
+                productsByPriceRange()
                 break;
             case 5:
-                // funcion eliminar producto
+                deleteProduct()
                 break;
-            case 6:
+            case 6: 
+                verifyProductExist()
+            case 7:
+                // funcion de comprar producto
+            case 8:
                 console.log("Saliste del programa");
                 break;
             default:
