@@ -95,6 +95,46 @@ function productsByPriceRange() {
     }
 }
 
+function updateProduct() {
+    console.log("Elija el producto que quiere actualizar")
+    showProductsTable()
+    const productName = prompt("Ingrese el nombre del prodcuto que quiere ver")
+    const productFound = Object.values(products).find(product => product.name === productName) 
+
+    if (!productFound) {
+        console.log("El producto ingresado no existe")
+        return
+    }
+
+    console.log("El producto que vamos a actualizar es")
+    console.table([productFound])
+
+    const newName = prompt("Ingrese el nuevo nombre del producto:")
+    if (newName.trim() !== "") {
+        productFound.name = newName
+    }
+
+    const newPrice = parseInt(prompt("Ingrese el nuevo precio del producto:"))
+
+    if (isNaN(newPrice) && newPrice > 0) {
+        productFound.price = newPrice
+    }
+
+    const newQuantity = parseInt(prompt("Ingrese la nueva cantidad del producto:"))
+    if (isNaN(newQuantity) && newQuantity > 0) {
+        productFound.quantity = newQuantity
+    }
+
+    const newDescription = prompt("Ingrese la nueva descripcion del producto:")
+    if (newDescription.trim() !== "") {
+        productFound.name = newDescription
+    }
+
+    console.log("Producto actualizado")
+    console.table([productFound])
+    showProductsTable()
+}
+
 function deleteProduct() {
     showProductsTable();
     const productId = parseInt(prompt("Ingrese el ID del producto a eliminar:"));
@@ -105,24 +145,33 @@ function deleteProduct() {
     showProductsTable();
 }
 
-function verifyProductExist() {
+function verifyProductExistAndSellOrBuy() {
     showProductsTable();
-    const productName = prompt("Ingrese el nombre del producto que desea vender")
-
+    const productName = prompt("Ingrese el nombre del producto que desea verificar")
     const productExist = Object.values(products).some(product => product.name === productName)
 
-    if(productExist) {
-        const sellConfirmation = confirm(`¿Desea vender ${productName}?`);
+    let confirmation = 0
+    
+    while (productExist && confirmation !== '3') {
+        confirmation = prompt(`Que quieres hacer con el producto ${productName}\n1: Vender\n2: Comprar\n3: Salir`)
+        let product = Object.values(products).find(product => product.name === productName)
 
-        if (sellConfirmation) {
-            const product = Object.values(products).find(product => product.name === productName);
-            sellProduct(product)
-        } else {
-            return;
-        //  showMenu()
+        switch (confirmation) {
+            case '1': 
+                product = Object.values(products).find(product => product.name === productName)
+                sellProduct(product)
+                break
+            case '2':
+                product = Object.values(products).find(product => product.name === productName)
+                buyProduct(product)
+                break
+            case '3': 
+                console.log("Saliteeeeeee")
+                break
+                //showMenu()
+            default: 
+                console.log("Opcion invalida, escoja un numero entre 1 y 3")
         }
-    } else {
-        console.log("El producto no existe en el inventario")
     }
 }
 
@@ -160,10 +209,37 @@ function sellProduct(product) {
     showProductsTable()
 }
 
+function buyProduct(product) {
+    console.log(`Daelles del producto que seas comprar:`)
+    console.table([product])
+
+    const quantityToBuy = parent(prompt(`Ingrese la cantidad de "${product.name}" que desea comprar:`))
+
+    if (isNaN(quantityToBuy) || quantityToBuy <= 0) {
+        console.log("La cantidad ingresada es invalida")
+        return
+    }
+
+    product.quantity += quantityToBuy
+    console.log(`Se compraron ${quantityToBuy} de ${product.name}`)
+    showProductsTable()
+}
+
+function calculatedInventoryPrice() {
+    let valueProducts = 0
+
+    for (const product of Object.values(products)) {
+        const valueProduct = product.price * product.quantity
+
+        valueProducts += valueProduct
+    }
+    alert(`El valor total del inventario es ${valueProducts}`)
+}
+
 function main() {
     let option = 0;
 
-    while (option !== 8) {
+    while (option !== 12) {
         showMenu();
         option = parseInt(prompt("Seleccione una opción del menu:"));
 
@@ -184,12 +260,16 @@ function main() {
                 deleteProduct()
                 break;
             case 6: 
-                verifyProductExist()
+                verifyProductExistAndSellOrBuy()
+                break
             case 7:
-                // funcion de comprar producto
+                updateProduct()
+                break
             case 8:
-                console.log("Saliste del programa");
+                calculatedInventoryPrice()
                 break;
+            case 9: 
+                //
             default:
                 console.log("Opcion invalida, por favor elija una opcion del menu");
         }
