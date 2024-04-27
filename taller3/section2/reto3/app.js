@@ -1,19 +1,28 @@
-let products = {};
-let idCounter = 1;
-const badWords = ['palabra1', 'palabra2', 'palabra3', 'palabra4', 'palabra5'];
+let products = {}
+let idCounter = 1
+const badWords = ['hijueputa', 'malparido', 'gonorrea', 'pirobo', 'marica']
 
+let listBadProducts = []
 
 function showMenu() {
-    console.log("Bienvenido al Sistema de Gestion de Inventario");
-    console.log("1. Cree un producto nuevo");
-    console.log("2. Duplique un producto existente");
-    console.log("3. Vea un producto por nombre");
-    console.log("4. Vea los productos en un rango de precio max-min");
-    console.log("5. Elimine un producto");
-    console.log("6. Verificar existencia de producto y venderlo");
-    console.log("7. Comprar un producto del inventario");
-    console.log("8. Salir");
+    console.log(`
+Bienvenido al Sistema de Gestión de Inventario
+
+1. Crear un producto nuevo
+2. Duplicar un producto existente
+3. Buscar un producto por nombre
+4. Ver los productos en un rango de precio
+5. Eliminar un producto
+6. Verificar existencia de un producto y venderlo/comprarlo
+7. Actualizar un producto
+8. Calcular el valor total del inventario
+9. Opciones para ordenar un producto, por nombre, precio y cantidad
+10. Filtrar productos con malas palabras en la descripcion
+11. Generar reporte de productos
+12. Salir
+`);
 }
+
 
 function showProductsTable() {
     console.log("Productos en Inventario");
@@ -21,10 +30,10 @@ function showProductsTable() {
 }
 
 function createProduct() {
-    const nameProduct = prompt("Ingrese el nombre del producto:");
-    const priceProduct = parseFloat(prompt("Ingrese el precio del producto:"));
-    const quantityProduct = parseInt(prompt("Ingrese la cantidad del producto:"));
-    const descriptionProduct = prompt("Ingrese la descripción del producto:");
+    const nameProduct = prompt("Ingrese el nombre del producto:")
+    const priceProduct = parseFloat(prompt("Ingrese el precio del producto:"))
+    const quantityProduct = parseInt(prompt("Ingrese la cantidad del producto:"))
+    const descriptionProduct = prompt("Ingrese la descripción del producto:")
 
     const newProduct = {
         id: idCounter,
@@ -272,10 +281,69 @@ function sortByQuantityDescending() {
     console.table(sortedProducts)
 }
 
+function containBadword() {
+    for (const word of badWords) {
+        if (description.toLowercase().includes(word)) {
+            return true
+        }
+    }
+}
+function filterForBadWords() {
+    for (const product of Object.values(products)){
+        if (containBadword(product.description)) {
+            listBadProducts.push(Object.assign({}, product))
+        }
+    }
+    console.log("Los productos que contienen malas palabras son")
+    console.table(listBadProducts)
+}
+
+function replaceBadWords() {
+    for (const product of Object.values(products)) {
+        product.description = badWords.reduce((description, word) => {
+            // el primer parametro son las palabras que buscamos y el segundo parametro 'gi' nos indica que 'g' es global o sea que busacara en todo el string y 'i' que sera indiferente de minusculas o mayusculas.
+            const regex = new RegExp(word, 'gi')
+            return description.replace(regex, '*'.repeat(word.length))
+        }, product.description)
+    }
+}
+
+function calculateTotalProducts() {
+    return Object.values(products).length
+}
+
+function generateReport() {
+    console.log("Reporte General de Productos")
+
+    sortByPriceDescending
+    const mostExpensiveProducts = Object.values(products).filter((product, index) => index < 3)
+    const cheapestProducts = Object.values(products).filter((product, index) => index >= -3)
+
+    sortByQuantityDescending();
+    const mostStockedProducts = Object.values(products).filter((product, index) => index < 3)
+    const leastStockedProducts = Object.values(products).filter((product, index) => index < -3)
+
+    replaceBadWords()
+
+    console.log("Productos más caros:")
+    console.table(mostExpensiveProducts)
+
+    console.log("Productos más baratos:")
+    console.table(cheapestProducts)
+
+    console.log("Productos con mayor cantidad disponible:")
+    console.table(mostStockedProducts)
+    
+    console.log("Productos con menor cantidad disponible:")
+    console.table(leastStockedProducts)
+
+    showProductsTable()
+}
+
 function main() {
     let option = 0
 
-    while (option !== 12) {
+    while (option !== 11) {
         showMenu()
         option = parseInt(prompt("Seleccione una opción del menu:"))
 
@@ -327,7 +395,11 @@ function main() {
                     default:
                         console.log("Opcion de ordenamiento invalida.")
                 }
+            case 10: 
+                filterForBadWords()
                 break
+            case 11: 
+                generateReport()
             default:
                 console.log("Opcion invalida, por favor elija una opcion del menu")
         }
