@@ -1,5 +1,7 @@
 let products = {};
 let idCounter = 1;
+const badWords = ['palabra1', 'palabra2', 'palabra3', 'palabra4', 'palabra5'];
+
 
 function showMenu() {
     console.log("Bienvenido al Sistema de Gestion de Inventario");
@@ -236,29 +238,63 @@ function calculatedInventoryPrice() {
     alert(`El valor total del inventario es ${valueProducts}`)
 }
 
+function showSortingOptions() {
+    console.log("Seleccione una opcion de ordenamiento:\n1. Ordenar por nombre de forma ascendente (A-Z)\n2. Ordenar por precio de forma ascendente\n3. Ordenar por precio de forma descendente\n4. Ordenar por cantidad de forma ascendente\n5. Ordenar por cantidad de forma descendente")
+}
+
+function sortByNameAscending() {
+    const sortedProducts = Object.values(products).sort((a, b) => a.name.localeCompare(b.name))
+    console.log("Productos ordenados por nombre:")
+    console.table(sortedProducts)
+}
+
+function sortByPriceAscending() {
+    const sortedProducts = Object.values(products).sort((a, b) => a.price - b.price)
+    console.log("Productos ordenados por precio de forma ascendente:")
+    console.table(sortedProducts)
+}
+
+function sortByPriceDescending() {
+    const sortedProducts = Object.values(products).sort((a, b) => b.price - a.price)
+    console.log("Productos ordenados por precio de forma descendente:")
+    console.table(sortedProducts)
+}
+
+function sortByQuantityAscending() {
+    const sortedProducts = Object.values(products).sort((a, b) => a.quantity - b.quantity)
+    console.log("Productos ordenados por cantidad de forma ascendente:")
+    console.table(sortedProducts)
+}
+
+function sortByQuantityDescending() {
+    const sortedProducts = Object.values(products).sort((a, b) => b.quantity - a.quantity)
+    console.log("Productos ordenados por cantidad de forma descendente:")
+    console.table(sortedProducts)
+}
+
 function main() {
-    let option = 0;
+    let option = 0
 
     while (option !== 12) {
-        showMenu();
-        option = parseInt(prompt("Seleccione una opción del menu:"));
+        showMenu()
+        option = parseInt(prompt("Seleccione una opción del menu:"))
 
         switch (option) {
             case 1:
-                createProduct();
-                break;
+                createProduct()
+                break
             case 2:
-                duplicateProduct();
-            break;
+                duplicateProduct()
+            break
             case 3:
                 searchProduct()
-                break;
+                break
             case 4:
                 productsByPriceRange()
-                break;
+                break
             case 5:
                 deleteProduct()
-                break;
+                break
             case 6: 
                 verifyProductExistAndSellOrBuy()
                 break
@@ -267,13 +303,35 @@ function main() {
                 break
             case 8:
                 calculatedInventoryPrice()
-                break;
+                break
             case 9: 
-                //
+                showSortingOptions()
+                const sortingOption = parseInt(prompt("Seleccione una opcion de ordenamiento:"))
+
+                switch (sortingOption) {
+                    case 1:
+                        sortByNameAscending()
+                        break
+                    case 2:
+                        sortByPriceAscending()
+                        break
+                    case 3:
+                        sortByPriceDescending()
+                        break
+                    case 4:
+                        sortByQuantityAscending()
+                        break
+                    case 5:
+                        sortByQuantityDescending()
+                        break
+                    default:
+                        console.log("Opcion de ordenamiento invalida.")
+                }
+                break
             default:
-                console.log("Opcion invalida, por favor elija una opcion del menu");
+                console.log("Opcion invalida, por favor elija una opcion del menu")
         }
     }
 }
 
-main();
+main()
