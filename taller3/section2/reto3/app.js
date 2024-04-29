@@ -1,6 +1,7 @@
 let products = {}
 let idCounter = 1
-const badWords = ['hijueputa', 'malparido', 'gonorrea', 'pirobo', 'marica']
+// Me tome literal lo de malas palabras <3
+const badWords = ['hijueputa', 'malparido', 'gonorrea', 'pirobo', 'marica', 'malparida', 'sapo', 'asco', 'tonto', 'ridiculo']
 
 let listBadProducts = []
 
@@ -177,7 +178,7 @@ function verifyProductExistAndSellOrBuy() {
                 buyProduct(product)
                 break
             case '3': 
-                console.log("Saliteeeeeee")
+                console.log("Saliste")
                 break
                 //showMenu()
             default: 
@@ -224,7 +225,7 @@ function buyProduct(product) {
     console.log(`Daelles del producto que seas comprar:`)
     console.table([product])
 
-    const quantityToBuy = parent(prompt(`Ingrese la cantidad de "${product.name}" que desea comprar:`))
+    const quantityToBuy = parseInt(prompt(`Ingrese la cantidad de "${product.name}" que desea comprar:`))
 
     if (isNaN(quantityToBuy) || quantityToBuy <= 0) {
         console.log("La cantidad ingresada es invalida")
@@ -281,9 +282,33 @@ function sortByQuantityDescending() {
     console.table(sortedProducts)
 }
 
-function containBadword() {
+function sortProducts() {
+    const sortingOption = parseInt(prompt("Seleccione una opción de ordenamiento:"))
+
+    switch (sortingOption) {
+        case 1:
+            sortByNameAscending()
+            break
+        case 2:
+            sortByPriceAscending()
+            break
+        case 3:
+            sortByPriceDescending()
+            break
+        case 4:
+            sortByQuantityAscending()
+            break
+        case 5:
+            sortByQuantityDescending()
+            break
+        default:
+            console.log("Opción de ordenamiento inválida.")
+    }
+}
+
+function containBadword(description) {
     for (const word of badWords) {
-        if (description.toLowercase().includes(word)) {
+        if (description.toLowerCase().includes(word)) {
             return true
         }
     }
@@ -315,11 +340,11 @@ function calculateTotalProducts() {
 function generateReport() {
     console.log("Reporte General de Productos")
 
-    sortByPriceDescending
+    sortByPriceDescending()
     const mostExpensiveProducts = Object.values(products).filter((product, index) => index < 3)
     const cheapestProducts = Object.values(products).filter((product, index) => index >= -3)
 
-    sortByQuantityDescending();
+    sortByQuantityDescending()
     const mostStockedProducts = Object.values(products).filter((product, index) => index < 3)
     const leastStockedProducts = Object.values(products).filter((product, index) => index < -3)
 
@@ -343,7 +368,7 @@ function generateReport() {
 function main() {
     let option = 0
 
-    while (option !== 11) {
+    while (option !== 12) {
         showMenu()
         option = parseInt(prompt("Seleccione una opción del menu:"))
 
@@ -374,32 +399,17 @@ function main() {
                 break
             case 9: 
                 showSortingOptions()
-                const sortingOption = parseInt(prompt("Seleccione una opcion de ordenamiento:"))
-
-                switch (sortingOption) {
-                    case 1:
-                        sortByNameAscending()
-                        break
-                    case 2:
-                        sortByPriceAscending()
-                        break
-                    case 3:
-                        sortByPriceDescending()
-                        break
-                    case 4:
-                        sortByQuantityAscending()
-                        break
-                    case 5:
-                        sortByQuantityDescending()
-                        break
-                    default:
-                        console.log("Opcion de ordenamiento invalida.")
-                }
+                sortProducts()
+                break
             case 10: 
                 filterForBadWords()
                 break
             case 11: 
                 generateReport()
+                break
+            case 12:
+                console.log("Saliste")
+                break
             default:
                 console.log("Opcion invalida, por favor elija una opcion del menu")
         }
